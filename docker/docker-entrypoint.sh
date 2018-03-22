@@ -37,21 +37,11 @@ echo "[ INFO ] Configuring Nginx"
  fi
 }
 
-function files_missing() {
-export GRAV_HOME=/var/www/localhost/htdocs/
-if ! [ -e $GRAV_HOME/index.php -a -e $GRAV_HOME/bin/grav ]; then
-  echo "Required files not found in $PWD - Copying from ${SOURCE}..."
-  cp -r "$SOURCE"/. $GRAV_HOME
-  chown -R nginx:www-data $GRAV_HOME
-  echo "Done."
-fi
-}
 
 function main() {
     configure_admin
     configure_nginx
     start_services
-    files_missing
 }
 
 
