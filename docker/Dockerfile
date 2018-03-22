@@ -35,22 +35,22 @@ RUN { \
 VOLUME /var/www/html
 
 # Set user to www-data
-RUN mkdir -p /var/www/localhost/htdocs
+RUN mkdir -p /usr/src/grav/
 
-# Install grav
-WORKDIR /var/www/localhost/htdocs
-ENV WORKDIR=/var/www/localhost/htdocs
+# Install grav into temp locationv
+ENV INSTALL_DIR=/var/www/localhost/htdocs
+ENV SOURCE=/usr/src/grav
 RUN set -ex; \
-    cd $WORKDIR && \
-    wget https://getgrav.org/download/core/grav-admin/latest -P $WORKDIR && \
-    unzip $WORKDIR/latest -d $WORKDIR && \
-    rm $WORKDIR/latest && \
-    chown -R nginx:www-data /var/www/localhost/htdocs && \
-    cd $WORKDIR/grav-admin && \
+    cd $SOURCE  && \
+    wget https://getgrav.org/download/core/grav-admin/latest -P $SOURCE && \
+    unzip $SOURCE/latest -d $SOURCE && \
+    rm $SOURCE/latest && \
+    chown -R nginx:www-data $SOURCE && \
+    cd $SOURCE/grav-admin && \
     sudo -u nginx /usr/bin/php bin/gpm install -f -y admin
 
-# make nginx owner of /htdocs
-RUN chown nginx:www-data /var/www/localhost/htdocs
+# make nginx owner of SOURCE again
+RUN chown -R nginx:www-data $SOURCE
 
 # Configure nginx with grav
 
@@ -66,4 +66,3 @@ RUN chmod +x /docker-entrypoint.sh && \
 EXPOSE 80 443
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD /usr/sbin/php-fpm7 ; /usr/sbin/nginx -g "daemon off;"

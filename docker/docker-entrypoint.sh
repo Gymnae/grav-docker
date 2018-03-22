@@ -2,8 +2,17 @@
 
 set -e
 
+function install() {
+if ! [ -e $INSTALL_DIR/index.php -a -e $INSTALL_DIR/bin/grav ]; then
+  echo "Required files not found in $INSTALL_DIR - Copying from ${SOURCE}..."
+  cp -r "$SOURCE"/grav-admin/. $INSTALL_DIR
+  chown -R nginx:www-data $INSTALL_DIR
+  echo "Done."
+fi
+}
+
 function configure_admin() {
-    export GRAV_HOME=/var/www/localhost/htdocs/grav-admin
+    export GRAV_HOME=/var/www/localhost/htdocs/
 
     # Setup admin user (if supplied)
     if [ -z $ADMIN_USER ]; then
@@ -15,7 +24,7 @@ function configure_admin() {
             echo "[ INFO ] Setting up Grav admin user"
             cd $GRAV_HOME
 
-            sudo -u www-data bin/plugin login newuser \
+            sudo -u nginx /usr/bin/php bin/plugin login newuser \
                  --user=${ADMIN_USER} \
                  --password=${ADMIN_PASSWORD-"Pa55word"} \
                  --permissions=${ADMIN_PERMISSIONS-"b"} \
@@ -33,16 +42,20 @@ echo "[ INFO ] Configuring Nginx"
         echo "[ INFO ]  > No Domain supplied. Not updating server config"
  else
   echo "[ INFO ]  > Setting server_name to" ${DOMAIN} www.${DOMAIN}
-        sed -i 's/server_name localhost/server_name '${DOMAIN}' 'www.${DOMAIN}'/g' /etc/nginx/conf.d/grav.conf
+        sed -i 's/server_name localhost/server_name '${DOMAIN}' 'www.${DOMAIN}'/g' /etc/nginx/sites-enabled/grav.conf
  fi
 }
 
+function start_services() {
+echo "[ INFO ] Starting nginx"
+bash -c '/usr/sbin/php-fpm7 ; /usr/sbin/nginx -g "daemon off;"'
+}
 
 function main() {
+    install
     configure_admin
     configure_nginx
     start_services
 }
-
 
 main "$@"
