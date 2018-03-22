@@ -44,7 +44,7 @@ USER root
   # Configure nginx with grav
 WORKDIR grav-admin
 RUN cd webserver-configs && \
-    cp nginx.conf /etc/nginx/
+    cp nginx.conf /etc/nginx/ \
     cp grav.conf /etc/nginx/sites-enabled/
 
 COPY docker-entrypoint.sh /
