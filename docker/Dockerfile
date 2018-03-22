@@ -27,7 +27,7 @@ RUN { \
 VOLUME /var/www/html
 
 # Set user to www-data
-RUN mkdir -p /var/www/localhost/htdocs && chown nginx:www-data /var/www/localhost/htodcs
+RUN mkdir -p /var/www/localhost/htdocs && chown nginx:www-data /var/www/localhost/htdocs
 USER nginx
 
 # Install grav
