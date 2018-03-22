@@ -7,16 +7,8 @@ LABEL version="0.1"
 
 # install the PHP extensions we need
 RUN apk-install	\
-        php7@community  \
-	php7-yaml@community  \
-        php7-session@community  \
-        php7-mbstring@community  \
-        php7-json@community \
-        php7-simplexml@community  \
-        php7-ctype@community  \
-        php7-dom@community  \
-        php7-xml@community  \
-        php7-zip@community \
+	php7-gd@community \
+	php7-zip@community \
 	php7-opcache@community
 
 # set recommended PHP.ini settings
@@ -43,20 +35,19 @@ ENV WORKDIR=/var/www/localhost/htdocs
 RUN set -ex; \
     cd $WORKDIR && \
     wget https://getgrav.org/download/core/grav-admin/latest -P $WORKDIR && \
-    unzip $WORKDIR/latest -d $WORKDIR && \
+    unzip $WORKDIR/latest && \
     rm $WORKDIR/latest && \
-    chown -R nginx:www-data /var/www/localhost/htdocs && \
-    cd $WORKDIR/grav-admin && \
-    sudo -u nginx /usr/bin/php bin/gpm install -f -y admin
+    cd grav-admin && \
+    bin/gpm install -f -y admin
 
 # make nginx owner of /htdocs
 RUN chown nginx:www-data /var/www/localhost/htdocs
 
 # Configure nginx with grav
-
 WORKDIR grav-admin
-COPY nginx.conf /etc/nginx/
-COPY grav.conf /etc/nginx/sites-enabled/
+RUN cd webserver-configs && \
+    cp nginx.conf /etc/nginx/ \
+    cp grav.conf /etc/nginx/sites-enabled/
 
 COPY docker-entrypoint.sh /
 
