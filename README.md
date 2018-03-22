@@ -1,18 +1,13 @@
-Docker CI Status:
-[ ![Codeship Status for opsforgeio/grav-docker](https://app.codeship.com/projects/985e9c40-a188-0135-1051-1ac528f51f8c/status?branch=master)](https://app.codeship.com/projects/254363)
-Image States on Hub:
-
- - grav: [![](https://images.microbadger.com/badges/image/opsforge/grav-docker.svg)](https://hub.docker.com/r/opsforge/grav-docker/ "Grav Docker Image")
+WIP
+This is fork of: opsforge/grav-docker
 
 # Grav docker container
-
-**Active versions:**
-
-- Grav: 1.3.8+ with Admin 1.6.6+ (updates with each re-run of the build)
 
 ## Credits
 
 This project makes use of the logic of the php7-apache image in the https://github.com/docker-library/wordpress project.
+This project is a fork of: opsforge/grav-docker.
+
 
 ## Benefits
 
