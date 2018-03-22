@@ -1,4 +1,4 @@
-FROM gymnae/webserverbase:master
+FROM gymnae/webserverbase:latest
 # dockerfile in portion inspired byby evnsio/grav and opsforge/grav-docker
 
 MAINTAINER gymnae
