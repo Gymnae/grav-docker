@@ -1,28 +1,15 @@
-FROM php:7.1-apache
+FROM gymnae/webserverbase:master
+# dockerfile in portion inspired byby evnsio/grav and opsforge/grav-docker
 
-# Image based on the Wordpress docker image from:
-
-MAINTAINER opsforge.io
+MAINTAINER gymnae
 LABEL name="grav-docker"
-LABEL version="1.0.1"
+LABEL version="0.1"
 
 # install the PHP extensions we need
-RUN set -ex; \
-	\
-	apt-get update; \
-	apt-get install -y \
-    wget \
-    unzip \
-		libjpeg-dev \
-		libpng12-dev \
-    zlib1g-dev \
-	; \
-	rm -rf /var/lib/apt/lists/*; \
-  apt-get clean && \
-	\
-	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
-	docker-php-ext-install gd zip opcache
-# TODO consider removing the *-dev deps and only keeping the necessary lib* packages
+RUN apk-install	\
+	php7-gd@community \
+	php7-zip@community \
+	php7-opcache@community
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
@@ -35,28 +22,40 @@ RUN { \
 		echo 'opcache.enable_cli=1'; \
 		echo 'upload_max_filesize=128M'; \
 		echo 'post_max_size=128M'; \
-	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
-
-RUN a2enmod rewrite expires
+	} > /etc/php7/conf.d/opcache-recommended.ini
 
 VOLUME /var/www/html
 
-ENV SOURCE="/usr/src/grav"
+# Set user to www-data
+RUN mkdir -p /var/www && chown www-data:www-data /var/www
+USER nginx
 
-RUN set -ex; \
-  wget https://getgrav.org/download/core/grav-admin/latest && \
-  unzip latest && \
-  mkdir -p "$SOURCE" && \
-  cp -r grav-admin/. "$SOURCE" && \
-  rm -rf grav-admin latest && \
-  chown -R www-data:www-data "$SOURCE"
+# Install grav
+WORKDIR /var/www
+RUN wget https://github.com/getgrav/grav/releases/download/$GRAV_VERSION/grav-admin-v$GRAV_VERSION.zip && \
+    unzip grav-admin-v$GRAV_VERSION.zip && \
+    rm grav-admin-v$GRAV_VERSION.zip && \
+    cd grav-admin && \
+    bin/gpm install -f -y admin
+
+# Return to root user
+USER root
+  
+  # Configure nginx with grav
+WORKDIR grav-admin
+RUN cd webserver-configs && \
+    sed -i 's/root \/home\/USER\/www\/html/root \/var\/www\/grav-admin/g' nginx.conf && \
+    cp nginx.conf /etc/nginx/conf.d/default.conf
+
+# Set the file permissions
+RUN usermod -aG www-data nginx
 
 COPY docker-entrypoint.sh /
 
 RUN chmod +x /docker-entrypoint.sh && \
   chown root:root /docker-entrypoint.sh
 
-EXPOSE 80
+EXPOSE 80 443
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["apache2-foreground"]
+CMD /usr/sbin/php-fpm7 ; /usr/sbin/nginx -g "daemon off;"
