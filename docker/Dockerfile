@@ -27,11 +27,11 @@ RUN { \
 VOLUME /var/www/html
 
 # Set user to www-data
-RUN mkdir -p /var/www && chown www-data:www-data /var/www
+RUN mkdir -p /var/www/localhost/htdocs && chown nginx:www-data /var/www/localhost/htodcs
 USER nginx
 
 # Install grav
-WORKDIR /var/www
+WORKDIR /var/www/localhost/htdocs
 RUN wget https://github.com/getgrav/grav/releases/download/$GRAV_VERSION/grav-admin-v$GRAV_VERSION.zip && \
     unzip grav-admin-v$GRAV_VERSION.zip && \
     rm grav-admin-v$GRAV_VERSION.zip && \
@@ -44,11 +44,8 @@ USER root
   # Configure nginx with grav
 WORKDIR grav-admin
 RUN cd webserver-configs && \
-    sed -i 's/root \/home\/USER\/www\/html/root \/var\/www\/grav-admin/g' nginx.conf && \
     cp nginx.conf /etc/nginx/
-
-# Set the file permissions
-RUN usermod -aG www-data nginx
+    cp grav.conf /etc/nginx/sites-enabled/
 
 COPY docker-entrypoint.sh /
 
