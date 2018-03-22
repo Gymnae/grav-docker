@@ -45,7 +45,7 @@ USER root
 WORKDIR grav-admin
 RUN cd webserver-configs && \
     sed -i 's/root \/home\/USER\/www\/html/root \/var\/www\/grav-admin/g' nginx.conf && \
-    cp nginx.conf /etc/nginx/conf.d/default.conf
+    cp nginx.conf /etc/nginx/
 
 # Set the file permissions
 RUN usermod -aG www-data nginx
