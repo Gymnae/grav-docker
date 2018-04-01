@@ -17,7 +17,8 @@ RUN apk-install	\
         php7-dom@community  \
         php7-xml@community  \
         php7-zip@community \
-	php7-opcache@community
+	php7-opcache@community \
+	php7-exif
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
