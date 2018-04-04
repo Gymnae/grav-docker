@@ -8,6 +8,7 @@ LABEL version="0.1"
 # install the PHP extensions we need
 RUN apk-install	\
         php7@community  \
+        php7-sodium@community \
 	php7-yaml@community  \
         php7-session@community  \
         php7-mbstring@community  \
