@@ -47,8 +47,7 @@ echo "[ INFO ] Configuring Nginx"
 }
 
 function start_services() {
-mkdir -p /dev/shm/cache/1/29
-mkdir -p /dev/shm/cache/1/30
+mkdir -p /dev/shm/cache/
 echo "[ INFO ] Starting nginx"
 bash -c '/usr/sbin/php-fpm7 ; /usr/sbin/nginx -g "daemon off;"'
 }
