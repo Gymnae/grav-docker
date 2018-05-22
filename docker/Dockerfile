@@ -19,6 +19,7 @@ RUN apk-install	\
         php7-xml@community  \
         php7-zip@community \
 	php7-opcache@community \
+	php7-apcu \
 	php7-exif@community
 
 # set recommended PHP.ini settings
