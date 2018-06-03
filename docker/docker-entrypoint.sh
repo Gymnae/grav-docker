@@ -1,5 +1,5 @@
 #!/bin/bash
-
+sed -i "s/max_execution_time =.*/max_execution_time = 1800/" /etc/php7/php.ini
 set -e
 
 function install() {
