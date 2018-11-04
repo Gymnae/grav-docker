@@ -5,7 +5,7 @@ set -e
 function install() {
 if ! [ -e $INSTALL_DIR/index.php -a -e $INSTALL_DIR/bin/grav ]; then
   echo "Required files not found in $INSTALL_DIR - Copying from ${SOURCE}..."
-  cp -rn "$SOURCE"/grav-admin/. $INSTALL_DIR
+  rsync -r --ignore-existing "$SOURCE"/grav-admin/. $INSTALL_DIR
   chown -R nginx:www-data $INSTALL_DIR
   echo "Done."
 fi
