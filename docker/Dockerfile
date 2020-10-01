@@ -9,20 +9,20 @@ LABEL version="0.1"
 # l
 # install the PHP extensions we need
 RUN apk add --no-cache	\
-        php7@community  \
-        php7-sodium@community \
-	php7-yaml@community  \
-        php7-session@community  \
-        php7-mbstring@community  \
-        php7-json@community \
-        php7-simplexml@community  \
-        php7-ctype@community  \
-        php7-dom@community  \
-        php7-xml@community  \
-        php7-zip@community \
-	php7-opcache@community \
-	php7-apcu@community \
-	php7-exif@community
+        php7  \
+        php7-sodium\
+	php7-yaml  \
+        php7-session  \
+        php7-mbstring  \
+        php7-json \
+        php7-simplexml  \
+        php7-ctype  \
+        php7-dom  \
+        php7-xml  \
+        php7-zip \
+	php7-opcache \
+	php7-apcu \
+	php7-exif
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
