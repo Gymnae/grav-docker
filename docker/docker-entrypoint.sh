@@ -1,5 +1,10 @@
 #!/bin/bash
+
+#optimize execution time
 sed -i "s/max_execution_time =.*/max_execution_time = 1800/" /etc/php7/php.ini
+
+#make sure that caddy can talk to php-fpm installed in image via tcp
+sed -i "s/;listen = /var/run/php-fpm7.sock/listen = 0.0.0.0:9000/" /etc/php7/php-fpm.conf
 set -e
 
 function install() {
