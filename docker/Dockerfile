@@ -43,7 +43,7 @@ VOLUME /var/www/html
 RUN mkdir -p /usr/src/grav/
 
 # Install grav into temp locationv
-ENV INSTALL_DIR=/var/www/localhost/htdocs
+ENV INSTALL_DIR=/var/www/localhost/htdocs/grav
 ENV SOURCE=/usr/src/grav
 RUN set -ex; \
     cd $SOURCE  && \
