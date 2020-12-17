@@ -12,7 +12,7 @@ fi
 }
 
 function configure_admin() {
-    export GRAV_HOME=/var/www/localhost/htdocs/
+    export GRAV_HOME=/var/www/localhost/htdocs/grav/
 
     # Setup admin user (if supplied)
     if [ -z $ADMIN_USER ]; then
